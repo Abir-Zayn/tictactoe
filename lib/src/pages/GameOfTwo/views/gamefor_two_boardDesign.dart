@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tictac/src/const/resource.dart';
 import 'package:tictac/src/pages/Game/controllers/gameboard_system.dart';
+import 'package:tictac/src/pages/GameOfTwo/Logic/gamefor_two_logic.dart';
+import 'package:tictac/src/pages/GameOfTwo/controller/gamefor_two_controller.dart';
 import 'package:tictac/src/pages/Settings/controller/settings_controller.dart';
 
 class GameForTwoBackground extends StatefulWidget {
@@ -14,12 +16,15 @@ class GameForTwoBackground extends StatefulWidget {
 class _GameForTwoBackgroundState extends State<GameForTwoBackground> {
   @override
   Widget build(BuildContext context) {
+    //Settings Controller to have the selected theme for the game
     final SettingsController settingsController =
         Provider.of<SettingsController>(context);
     final List<String> themeImages = [R.woodenbg, R.glassbg, R.blackbg];
-    return Consumer<GameboardSystem>(
-      builder: (context, gameSystem, child) {
-        gameSystem.showAlert(context);
+
+    //Gameboard System to handle the game logic
+    return Consumer<GameforTwoController>(
+      builder: (context, gameController, child) {
+        final GameForTwoLogic gameLogic = gameController.passNplay;
         return Scaffold(
           body: Container(
             padding: const EdgeInsets.only(top: 50),
@@ -113,16 +118,14 @@ class _GameForTwoBackgroundState extends State<GameForTwoBackground> {
                       padding: const EdgeInsets.all(15.0),
                       itemCount: 9,
                       itemBuilder: (context, index) {
-                        if (index < 0 || index >= 9) {
-                          return Container();
-                        } // Return empty container for invalid indices
-
-                        final gameSystem =
-                            Provider.of<GameboardSystem>(context);
-                        final position = {'row': index ~/ 3, 'col': index % 3};
+                        int row = index ~/ 3;
+                        int col = index % 3;
 
                         return GestureDetector(
-                          onTap: () => gameSystem.makeMove(index),
+                          onTap: () {
+                            gameLogic.makeMove(row, col);
+                            setState(() {});
+                          },
                           child: AnimatedContainer(
                             duration: Duration(milliseconds: 200),
                             decoration: BoxDecoration(
@@ -138,12 +141,13 @@ class _GameForTwoBackgroundState extends State<GameForTwoBackground> {
                             ),
                             child: Center(
                               child: Text(
-                                gameSystem.getCell(
-                                    position['row']!, position['col']!),
-                                style: const TextStyle(
+                                gameLogic.board[row][col],
+                                style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                                  color: gameLogic.board[row][col] == 'X'
+                                      ? Colors.blue
+                                      : Colors.red,
                                 ),
                               ),
                             ),
@@ -152,6 +156,24 @@ class _GameForTwoBackgroundState extends State<GameForTwoBackground> {
                       },
                     ),
                   ),
+                ),
+                if (gameLogic.winner != null)
+                  Text(
+                    'Round Winner: ${gameLogic.winner}',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                if (gameController.winner != null)
+                  Text(
+                    'Overall Winner: ${gameController.winner}',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ElevatedButton(
+                  onPressed: gameController.resetRound,
+                  child: Text('Next Round'),
+                ),
+                ElevatedButton(
+                  onPressed: gameController.resetGame,
+                  child: Text('Reset Game'),
                 ),
               ],
             ),
