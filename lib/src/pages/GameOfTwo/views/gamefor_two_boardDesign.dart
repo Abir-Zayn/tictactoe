@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:tictac/src/const/resource.dart';
 import 'package:tictac/src/pages/Game/controllers/gameboard_system.dart';
 import 'package:tictac/src/pages/Settings/controller/settings_controller.dart';
 
-class GameboardBackground extends StatelessWidget {
-  const GameboardBackground({super.key});
+class GameForTwoBackground extends StatefulWidget {
+  const GameForTwoBackground({super.key});
 
+  @override
+  State<GameForTwoBackground> createState() => _GameForTwoBackgroundState();
+}
+
+class _GameForTwoBackgroundState extends State<GameForTwoBackground> {
   @override
   Widget build(BuildContext context) {
     final SettingsController settingsController =
@@ -30,7 +34,7 @@ class GameboardBackground extends StatelessWidget {
                       // Player 1
                       Column(
                         children: const [
-                          Icon(Ionicons.person_outline, size: 40),
+                          Icon(Icons.person, size: 40),
                           SizedBox(height: 8),
                           Text(
                             'Player 1',
@@ -44,7 +48,7 @@ class GameboardBackground extends StatelessWidget {
                       // Timer
                       Column(
                         children: const [
-                          Icon(Ionicons.infinite_outline, size: 40),
+                          Icon(Icons.timer, size: 40),
                           SizedBox(height: 8),
                           Text(
                             '00:00',
@@ -55,13 +59,13 @@ class GameboardBackground extends StatelessWidget {
                           ),
                         ],
                       ),
-                      //Bot Wins
+                      // Player 2
                       Column(
                         children: const [
-                          Icon(Ionicons.desktop_outline, size: 40),
+                          Icon(Icons.person, size: 40),
                           SizedBox(height: 8),
                           Text(
-                            'Bot',
+                            'Player 2',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

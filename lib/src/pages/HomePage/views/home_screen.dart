@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen>
                       Color.fromARGB(255, 233, 155, 11)
                     ],
                     onPressed: () {
-                      Navigator.pushNamed(context, '/howtoplay');
+                      context.push('/gamepassnplay');
                     },
                   ),
                   const SizedBox(height: 20),
